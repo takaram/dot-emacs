@@ -144,13 +144,14 @@
              (setcdr (assoc 'file org-link-frame-setup) 'find-file))
 
 (defun open-startup-menu ()
-  (let ((path-to-memo "~/ownCloud/memo.org"))
+  (let ((path-to-memo "~/ownCloud/memo.org")
+        (original-directory default-directory))
     (when (file-readable-p path-to-memo)
       (find-file path-to-memo)
       (setq org-capture-templates
             '(("t" "TODO" entry (file+headline path-to-memo "Tasks")
                "* TODO %?\n\n")))
-      (cd "~/"))))
+      (cd original-directory))))
 (add-hook 'emacs-startup-hook 'open-startup-menu)
 
 (add-hook 'dired-load-hook
