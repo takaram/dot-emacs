@@ -1,0 +1,9 @@
+auto-save-list/*
+backup/*
+eshell/*
+init-local.el
+*.elc
+lisp/*
+recentf
+tramp
+!.gitkeep
