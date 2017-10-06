@@ -198,6 +198,11 @@
              :no-require t)
 
 (defun compile-init-el ()
-  (byte-recompile-directory user-emacs-directory 0))
+  (dolist (file (list
+                 user-init-file
+                 (expand-file-name "init-local.el" user-emacs-directory)))
+    (when (and (file-exists-p file)
+               (file-newer-than-file-p file (concat file "c")))
+      (byte-compile-file file))))
 (add-hook 'after-init-hook 'compile-init-el)
 (add-hook 'kill-emacs-hook 'compile-init-el)
