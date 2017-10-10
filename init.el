@@ -137,12 +137,12 @@
 ;;                            (lambda (arg) (ruby-end-of-block)) nil))))
 
 (use-package org
-             :bind ("C-c C-c" . org-capture)
-             :defines org-capture-templates
-             :config
-             (setq org-return-follows-link t
-                   org-startup-folded nil)
-             (setcdr (assoc 'file org-link-frame-setup) 'find-file))
+  :bind ("C-c C-c" . org-capture)
+  :defines org-capture-templates
+  :config
+  (setq org-return-follows-link t
+        org-startup-folded nil)
+  (setcdr (assoc 'file org-link-frame-setup) 'find-file))
 
 (defun open-startup-menu ()
   (let ((path-to-memo "~/ownCloud/memo.org")
@@ -161,43 +161,47 @@
                   line-spacing nil)
             (put 'dired-find-alternate-file 'disabled nil)))
 (use-package dired-toggle
-             :bind ("C-x C-d" . dired-toggle)
-             :config
-             (setq dired-toggle-window-side 'below
-                   dired-toggle-window-size 8))
+  :bind ("C-x C-d" . dired-toggle)
+  :config
+  (setq dired-toggle-window-side 'below
+        dired-toggle-window-size 8))
 
 (use-package sh-script
-             :config
-             (sh-electric-here-document-mode -1))
+  :config
+  (sh-electric-here-document-mode -1))
 
 (use-package markdown-mode
-             :mode ("\\.markdown\\'" "\\.md\\'")
-             :no-require t)
+  :mode ("\\.markdown\\'" "\\.md\\'")
+  :no-require t)
 
 (use-package yaml-mode
-             :mode "\\.ya?ml\\'"
-             :no-require t)
+  :mode "\\.ya?ml\\'"
+  :no-require t)
 
 (use-package sed-mode
-             :mode "\\.sed\\'"
-             :interpreter "sed"
-             :no-require t)
+  :mode "\\.sed\\'"
+  :interpreter "sed"
+  :no-require t)
 
 (use-package ess-site
-             :load-path "/usr/share/emacs24/site-lisp/ess"
-             :defer t
-             :no-require t)
+  :load-path "/usr/share/emacs24/site-lisp/ess"
+  :defer t
+  :no-require t)
 
 (use-package multi-term
-             :commands multi-term
-             :config
-             (add-hook 'term-mode-hook
-                       (lambda ()
-                         (setq show-trailing-whitespace nil)
-                         (linum-mode 0)
-                         (hl-line-mode 0)
-                         (set-face-background 'hl-line (face-background 'default))))
-             :no-require t)
+  :commands multi-term
+  :config
+  (add-hook 'term-mode-hook
+            (lambda ()
+              (setq show-trailing-whitespace nil)
+              (linum-mode 0)
+              (hl-line-mode 0)
+              (set-face-background 'hl-line (face-background 'default))))
+  :no-require t)
+
+(use-package magit
+  :commands magit-status
+  :no-require t)
 
 (defun compile-init-el ()
   (dolist (file (list
