@@ -200,7 +200,7 @@
   :no-require t)
 
 (use-package magit
-  :commands magit-status
+  :bind ("C-c C-g" . magit-status)
   :no-require t)
 
 (defun compile-init-el ()
