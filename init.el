@@ -98,27 +98,27 @@
         (revert-buffer :ignore-auto :noconfirm)
         (with-current-buffer (current-buffer) (funcall mm)))
     (error "The buffer has been modified")))
-(global-set-key (kbd "<f5>") 'revert-buffer-no-confirm)
+(bind-key "<f5>" 'revert-buffer-no-confirm)
 
-(global-set-key (kbd "C-m") 'reindent-then-newline-and-indent)
-(global-set-key (kbd "C-j") 'newline)
+(bind-key "C-m" 'reindent-then-newline-and-indent)
+(bind-key "C-j" 'newline)
 (defun indent-all ()
   (interactive)
   (indent-region (point-min) (point-max)))
-(global-set-key (kbd "C-M-]") 'indent-all)
+(bind-key "C-M-]" 'indent-all)
 
-(global-set-key (kbd "C-k") 'kill-whole-line)
-(global-set-key (kbd "M-k") 'kill-line)
+(bind-key "C-k" 'kill-whole-line)
+(bind-key "M-k" 'kill-line)
 
-(global-set-key (kbd "C-x k") 'kill-this-buffer)
+(bind-key "C-x k" 'kill-this-buffer)
 (defun kill-this-buffer-and-window()
   (interactive)
   (kill-this-buffer)
   (delete-window))
-(global-set-key (kbd "C-x 9") 'kill-this-buffer-and-window)
+(bind-key "C-x 9" 'kill-this-buffer-and-window)
 
-;;(global-set-key (kbd "C-x C-r") 'replace-string)
-(global-set-key (kbd "C-x C-r") 'replace-regexp)
+;;(bind-key "C-x C-r" 'replace-string)
+(bind-key "C-x C-r" 'replace-regexp)
 
 ;;(require 'dashboard)
 ;;(dashboard-setup-startup-hook)
@@ -130,7 +130,7 @@
                   ruby-insert-encoding-magic-comment nil)))
 ;; (add-hook 'ruby-mode-hook
 ;; 	  (lambda () (hs-minor-mode 1)
-;;             (global-set-key (kbd "C-c h") 'hs-toggle-hiding)
+;;             (bind-key "C-c h" 'hs-toggle-hiding)
 ;;             (add-to-list 'hs-special-modes-alist
 ;;                          '(ruby-mode
 ;;                            "\\(def\\|do\\|{\\)" "\\(end\\|end\\|}\\)" "#"
