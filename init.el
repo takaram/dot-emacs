@@ -123,6 +123,7 @@
 ;;(require 'dashboard)
 ;;(dashboard-setup-startup-hook)
 
+(eval-when-compile (require 'ruby-mode nil t))
 (add-hook 'ruby-mode-hook
           (lambda ()
             (setq ruby-deep-indent-paren-style nil
@@ -205,5 +206,5 @@
     (when (and file (file-readable-p file)
                (file-newer-than-file-p file (concat file "c")))
       (byte-compile-file file))))
-(add-hook 'emacs-startup-hook 'compile-init-el)
+(add-hook 'after-init-hook 'compile-init-el)
 (add-hook 'kill-emacs-hook 'compile-init-el)
