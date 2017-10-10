@@ -19,12 +19,12 @@
 (require 'bind-key)
 
 (let ((file (expand-file-name "init-local" user-emacs-directory)))
-  (if (or (file-exists-p (concat file ".elc"))
-          (file-exists-p (concat file ".el")))
+  (if (or (file-readable-p (concat file ".elc"))
+          (file-readable-p (concat file ".el")))
       (load file)))
 
 (setq custom-file (expand-file-name ".custom-file.el" user-emacs-directory))
-;; (if (file-exists-p custom-file)
+;; (if (file-readable-p custom-file)
 ;;     (load-file custom-file))
 
 (unless backup-directory-alist
@@ -65,8 +65,8 @@
                'term-mode-hook
                'eshell-mode-hook))
   (add-hook hook
-            '(lambda ()
-               (setq show-trailing-whitespace nil))))
+            (lambda ()
+              (setq show-trailing-whitespace nil))))
 
 (setq backup-by-copying-when-linked t)
 
@@ -124,16 +124,16 @@
 ;;(dashboard-setup-startup-hook)
 
 (add-hook 'ruby-mode-hook
-          '(lambda ()
-             (setq ruby-deep-indent-paren-style nil
-                   ruby-insert-encoding-magic-comment nil)))
+          (lambda ()
+            (setq ruby-deep-indent-paren-style nil
+                  ruby-insert-encoding-magic-comment nil)))
 ;; (add-hook 'ruby-mode-hook
-;; 	  '(lambda () (hs-minor-mode 1)
-;;              (global-set-key (kbd "C-c h") 'hs-toggle-hiding)
-;;              (add-to-list 'hs-special-modes-alist
-;;                           '(ruby-mode
-;;                             "\\(def\\|do\\|{\\)" "\\(end\\|end\\|}\\)" "#"
-;;                             (lambda (arg) (ruby-end-of-block)) nil))))
+;; 	  (lambda () (hs-minor-mode 1)
+;;             (global-set-key (kbd "C-c h") 'hs-toggle-hiding)
+;;             (add-to-list 'hs-special-modes-alist
+;;                          '(ruby-mode
+;;                            "\\(def\\|do\\|{\\)" "\\(end\\|end\\|}\\)" "#"
+;;                            (lambda (arg) (ruby-end-of-block)) nil))))
 
 (use-package org
              :bind ("C-c C-c" . org-capture)
@@ -155,10 +155,10 @@
 (add-hook 'emacs-startup-hook 'open-startup-menu)
 
 (add-hook 'dired-load-hook
-          '(lambda ()
-             (setq dired-listing-switches "-alhF"
-                   line-spacing nil)
-             (put 'dired-find-alternate-file 'disabled nil)))
+          (lambda ()
+            (setq dired-listing-switches "-alhF"
+                  line-spacing nil)
+            (put 'dired-find-alternate-file 'disabled nil)))
 (use-package dired-toggle
              :bind ("C-x C-d" . dired-toggle)
              :config
@@ -191,18 +191,18 @@
              :commands multi-term
              :config
              (add-hook 'term-mode-hook
-                       '(lambda ()
-                          (setq show-trailing-whitespace nil)
-                          (linum-mode 0)
-                          (hl-line-mode 0)
-                          (set-face-background 'hl-line (face-background 'default))))
+                       (lambda ()
+                         (setq show-trailing-whitespace nil)
+                         (linum-mode 0)
+                         (hl-line-mode 0)
+                         (set-face-background 'hl-line (face-background 'default))))
              :no-require t)
 
 (defun compile-init-el ()
   (dolist (file (list
                  user-init-file
                  (expand-file-name "init-local.el" user-emacs-directory)))
-    (when (and (file-exists-p file)
+    (when (and file (file-readable-p file)
                (file-newer-than-file-p file (concat file "c")))
       (byte-compile-file file))))
 (add-hook 'after-init-hook 'compile-init-el)
