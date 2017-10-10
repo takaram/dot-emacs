@@ -152,7 +152,7 @@
             '(("t" "TODO" entry (file+headline path-to-memo "Tasks")
                "* TODO %?\n\n")))
       (cd original-directory))))
-(add-hook 'emacs-startup-hook 'open-startup-menu)
+(add-hook 'after-init-hook 'open-startup-menu)
 
 (add-hook 'dired-load-hook
           (lambda ()
@@ -205,5 +205,5 @@
     (when (and file (file-readable-p file)
                (file-newer-than-file-p file (concat file "c")))
       (byte-compile-file file))))
-(add-hook 'after-init-hook 'compile-init-el)
+(add-hook 'emacs-startup-hook 'compile-init-el)
 (add-hook 'kill-emacs-hook 'compile-init-el)
