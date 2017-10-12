@@ -16,7 +16,8 @@
   (package-refresh-contents)
   (package-install 'use-package))
 (eval-when-compile (require 'use-package))
-(require 'bind-key)
+(use-package bind-key
+  :ensure t)
 
 (let ((file (expand-file-name "init-local" user-emacs-directory)))
   (if (or (file-readable-p (concat file ".elc"))
