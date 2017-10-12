@@ -1,9 +1,8 @@
-;; add load-path
-(add-to-list 'load-path "~/.emacs.d/elisp")
-
 ;; add ruby-mode
-(autoload 'ruby-mode "ruby-mode" "Mode for editing ruby source files" t)
-(add-to-list 'auto-mode-alist '("\\.rb$" . ruby-mode))
+(use-package ruby-mode
+  :mode "\\.rb\\'"
+  :interpreter "ruby"
+  :no-require t)
 
 ;; for ideas2
 (add-hook 'after-init-hook
@@ -19,5 +18,5 @@
 (set-face-foreground 'font-lock-string-face "color-197")
 (set-face-foreground 'minibuffer-prompt "brightblue")
 (add-hook 'linum-mode-hook
-          '(lambda()
-             (set-face-foreground 'linum "#999999")))
+          (lambda()
+            (set-face-foreground 'linum "#999999")))
