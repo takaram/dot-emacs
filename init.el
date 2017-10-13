@@ -98,50 +98,51 @@
         (revert-buffer :ignore-auto :noconfirm)
         (with-current-buffer (current-buffer) (funcall mm)))
     (error "The buffer has been modified")))
-(global-set-key (kbd "<f5>") 'revert-buffer-no-confirm)
+(bind-key "<f5>" 'revert-buffer-no-confirm)
 
-(global-set-key (kbd "C-m") 'reindent-then-newline-and-indent)
-(global-set-key (kbd "C-j") 'newline)
+(bind-key "C-m" 'reindent-then-newline-and-indent)
+(bind-key "C-j" 'newline)
 (defun indent-all ()
   (interactive)
   (indent-region (point-min) (point-max)))
-(global-set-key (kbd "C-M-]") 'indent-all)
+(bind-key "C-M-]" 'indent-all)
 
-(global-set-key (kbd "C-k") 'kill-whole-line)
-(global-set-key (kbd "M-k") 'kill-line)
+(bind-key "C-k" 'kill-whole-line)
+(bind-key "M-k" 'kill-line)
 
-(global-set-key (kbd "C-x k") 'kill-this-buffer)
+(bind-key "C-x k" 'kill-this-buffer)
 (defun kill-this-buffer-and-window()
   (interactive)
   (kill-this-buffer)
   (delete-window))
-(global-set-key (kbd "C-x 9") 'kill-this-buffer-and-window)
+(bind-key "C-x 9" 'kill-this-buffer-and-window)
 
-;;(global-set-key (kbd "C-x C-r") 'replace-string)
-(global-set-key (kbd "C-x C-r") 'replace-regexp)
+;;(bind-key "C-x C-r" 'replace-string)
+(bind-key "C-x C-r" 'replace-regexp)
 
 ;;(require 'dashboard)
 ;;(dashboard-setup-startup-hook)
 
+(eval-when-compile (require 'ruby-mode nil t))
 (add-hook 'ruby-mode-hook
           (lambda ()
             (setq ruby-deep-indent-paren-style nil
                   ruby-insert-encoding-magic-comment nil)))
 ;; (add-hook 'ruby-mode-hook
 ;; 	  (lambda () (hs-minor-mode 1)
-;;             (global-set-key (kbd "C-c h") 'hs-toggle-hiding)
+;;             (bind-key "C-c h" 'hs-toggle-hiding)
 ;;             (add-to-list 'hs-special-modes-alist
 ;;                          '(ruby-mode
 ;;                            "\\(def\\|do\\|{\\)" "\\(end\\|end\\|}\\)" "#"
 ;;                            (lambda (arg) (ruby-end-of-block)) nil))))
 
 (use-package org
-             :bind ("C-c C-c" . org-capture)
-             :defines org-capture-templates
-             :config
-             (setq org-return-follows-link t
-                   org-startup-folded nil)
-             (setcdr (assoc 'file org-link-frame-setup) 'find-file))
+  :bind ("C-c C-c" . org-capture)
+  :defines org-capture-templates
+  :config
+  (setq org-return-follows-link t
+        org-startup-folded nil)
+  (setcdr (assoc 'file org-link-frame-setup) 'find-file))
 
 (defun open-startup-menu ()
   (let ((path-to-memo "~/ownCloud/memo.org")
@@ -152,7 +153,7 @@
             '(("t" "TODO" entry (file+headline path-to-memo "Tasks")
                "* TODO %?\n\n")))
       (cd original-directory))))
-(add-hook 'emacs-startup-hook 'open-startup-menu)
+(add-hook 'after-init-hook 'open-startup-menu)
 
 (add-hook 'dired-load-hook
           (lambda ()
@@ -160,43 +161,47 @@
                   line-spacing nil)
             (put 'dired-find-alternate-file 'disabled nil)))
 (use-package dired-toggle
-             :bind ("C-x C-d" . dired-toggle)
-             :config
-             (setq dired-toggle-window-side 'below
-                   dired-toggle-window-size 8))
+  :bind ("C-x C-d" . dired-toggle)
+  :config
+  (setq dired-toggle-window-side 'below
+        dired-toggle-window-size 8))
 
 (use-package sh-script
-             :config
-             (sh-electric-here-document-mode -1))
+  :config
+  (sh-electric-here-document-mode -1))
 
 (use-package markdown-mode
-             :mode ("\\.markdown\\'" "\\.md\\'")
-             :no-require t)
+  :mode ("\\.markdown\\'" "\\.md\\'")
+  :no-require t)
 
 (use-package yaml-mode
-             :mode "\\.ya?ml\\'"
-             :no-require t)
+  :mode "\\.ya?ml\\'"
+  :no-require t)
 
 (use-package sed-mode
-             :mode "\\.sed\\'"
-             :interpreter "sed"
-             :no-require t)
+  :mode "\\.sed\\'"
+  :interpreter "sed"
+  :no-require t)
 
 (use-package ess-site
-             :load-path "/usr/share/emacs24/site-lisp/ess"
-             :defer t
-             :no-require t)
+  :load-path "/usr/share/emacs24/site-lisp/ess"
+  :defer t
+  :no-require t)
 
 (use-package multi-term
-             :commands multi-term
-             :config
-             (add-hook 'term-mode-hook
-                       (lambda ()
-                         (setq show-trailing-whitespace nil)
-                         (linum-mode 0)
-                         (hl-line-mode 0)
-                         (set-face-background 'hl-line (face-background 'default))))
-             :no-require t)
+  :commands multi-term
+  :config
+  (add-hook 'term-mode-hook
+            (lambda ()
+              (setq show-trailing-whitespace nil)
+              (linum-mode 0)
+              (hl-line-mode 0)
+              (set-face-background 'hl-line (face-background 'default))))
+  :no-require t)
+
+(use-package magit
+  :bind ("C-c C-g" . magit-status)
+  :no-require t)
 
 (defun compile-init-el ()
   (dolist (file (list
