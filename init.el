@@ -16,7 +16,8 @@
   (package-refresh-contents)
   (package-install 'use-package))
 (eval-when-compile (require 'use-package))
-(require 'bind-key)
+(use-package bind-key
+  :ensure t)
 
 (let ((file (expand-file-name "init-local" user-emacs-directory)))
   (if (or (file-readable-p (concat file ".elc"))
@@ -155,11 +156,19 @@
       (cd original-directory))))
 (add-hook 'after-init-hook 'open-startup-menu)
 
+(defun dired-find-file-or-alternate-directory ()
+  (interactive)
+  (if (file-directory-p (dired-get-file-for-visit))
+      (dired-find-alternate-file)
+    (dired-find-file)))
 (add-hook 'dired-load-hook
           (lambda ()
             (setq dired-listing-switches "-alhF"
                   line-spacing nil)
-            (put 'dired-find-alternate-file 'disabled nil)))
+            (put 'dired-find-alternate-file 'disabled nil)
+            (bind-keys :map dired-mode-map
+                       ("RET" . dired-find-file-or-alternate-directory)
+                       ([mouse-2] . dired-find-file-or-alternate-directory))))
 (use-package dired-toggle
   :bind ("C-x C-d" . dired-toggle)
   :config
