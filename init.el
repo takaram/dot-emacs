@@ -94,10 +94,7 @@
  the optional argument: force-reverting to true."
   (interactive "P")
   (if (or force-reverting (not (buffer-modified-p)))
-      (let ((mm (with-current-buffer (current-buffer)
-                  major-mode)))
-        (revert-buffer :ignore-auto :noconfirm)
-        (with-current-buffer (current-buffer) (funcall mm)))
+      (revert-buffer t t t)
     (error "The buffer has been modified")))
 (bind-key "<f5>" 'revert-buffer-no-confirm)
 
