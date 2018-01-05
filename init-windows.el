@@ -23,3 +23,6 @@
 (setq initial-frame-alist
       (append (list '(width . 82))
               initial-frame-alist))
+
+(setq shell-file-name "C:/Windows/System32/bash.exe"
+      multi-term-program shell-file-name)
