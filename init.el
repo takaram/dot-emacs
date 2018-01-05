@@ -78,13 +78,16 @@
 (defun add-parent-directory-in-buffer-name (&rest args)
   (let ((file (or buffer-file-name dired-directory)))
     (when file
-      (setq file (directory-file-name file))
+      (when (not (string= file "~/"))
+        (setq file (abbreviate-file-name (directory-file-name file))))
       (let* ((parent (directory-file-name
                       (file-name-directory file)))
-             (dir (if (string= parent "/")
-                      "/" (file-name-as-directory
-                           (file-name-nondirectory parent)))))
-        (rename-buffer (concat dir (file-name-nondirectory file)))))))
+             (dir (if (string-match "\\`/[^/]*\\'" parent)
+                      parent
+                    (file-name-nondirectory parent))))
+        (rename-buffer (concat
+                        (file-name-as-directory dir)
+                        (file-name-nondirectory file)))))))
 (advice-add 'find-file :after 'add-parent-directory-in-buffer-name)
 
 (defun revert-buffer-no-confirm (&optional force-reverting)
@@ -94,10 +97,7 @@
  the optional argument: force-reverting to true."
   (interactive "P")
   (if (or force-reverting (not (buffer-modified-p)))
-      (let ((mm (with-current-buffer (current-buffer)
-                  major-mode)))
-        (revert-buffer :ignore-auto :noconfirm)
-        (with-current-buffer (current-buffer) (funcall mm)))
+      (revert-buffer t t t)
     (error "The buffer has been modified")))
 (bind-key "<f5>" 'revert-buffer-no-confirm)
 
