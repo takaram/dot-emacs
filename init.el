@@ -90,6 +90,22 @@
                         (file-name-nondirectory file)))))))
 (advice-add 'find-file :after 'add-parent-directory-in-buffer-name)
 
+(defun switch-buffer-skipping-special-buffer (next)
+  (let ((start-buf (buffer-name))
+        (func (if next 'next-buffer 'previous-buffer)))
+    (funcall func)
+    (while (and (string-match "\\`\\*.+\\*\\'" (buffer-name))
+                (not (string= start-buf (buffer-name))))
+      (funcall func))))
+(defun next-buffer-skipping-special-buffer ()
+  (interactive)
+  (switch-buffer-skipping-special-buffer t))
+(defun previous-buffer-skipping-special-buffer ()
+  (interactive)
+  (switch-buffer-skipping-special-buffer nil))
+(bind-key "C-<right>" 'next-buffer-skipping-special-buffer)
+(bind-key "C-<left>" 'previous-buffer-skipping-special-buffer)
+
 (defun revert-buffer-no-confirm (&optional force-reverting)
   "Interactive call to revert-buffer. Ignoring the auto-save
  file and not requesting for confirmation. When the current buffer
