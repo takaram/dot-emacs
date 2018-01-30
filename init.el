@@ -194,7 +194,9 @@
 
 (use-package slim-mode
   :mode "\\.slim\\'"
-  :no-require t)
+  :no-require t
+  :config
+  (bind-key "C-m" 'newline-and-indent slim-mode-map))
 
 (use-package ess-site
   :load-path "/usr/share/emacs24/site-lisp/ess"
@@ -219,9 +221,10 @@
 (use-package coffee-mode
   :mode "\\.coffee\\'"
   :config
-  (setq coffee-tab-width 2))
-
-(bind-key "C-m" 'newline-and-indent slim-mode-map)
+  (add-hook 'coffee-mode-hook
+            (lambda ()
+              (setq coffee-tab-width 4
+                    tab-width 4))))
 
 (defun compile-init-el ()
   (dolist (file (list
