@@ -208,6 +208,10 @@
   :interpreter "sed"
   :no-require t)
 
+(use-package slim-mode
+  :mode "\\.slim\\'"
+  :no-require t)
+
 (use-package ess-site
   :load-path "/usr/share/emacs24/site-lisp/ess"
   :defer t
@@ -227,6 +231,13 @@
 (use-package magit
   :bind ("C-c C-g" . magit-status)
   :no-require t)
+
+(use-package coffee-mode
+  :mode "\\.coffee\\'"
+  :config
+  (setq coffee-tab-width 2))
+
+(bind-key "C-m" 'newline-and-indent slim-mode-map)
 
 (defun compile-init-el ()
   (dolist (file (list
