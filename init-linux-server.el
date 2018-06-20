@@ -1,3 +1,5 @@
+(eval-when-compile (require 'use-package))
+
 ;; add ruby-mode
 (use-package ruby-mode
   :mode "\\.rb\\'"
@@ -7,9 +9,9 @@
 ;; for ideas2
 (add-hook 'after-init-hook
           (lambda ()
-            (when (equal (user-real-login-name) "ideas2")
+            (when (string= (user-real-login-name) "ideas2")
               (setq backup-directory-alist
-                    '(".*" . "/aptmp/ideas2/aramaki/.emacs_backup")))))
+                    '((".*" . "/aptmp/ideas2/aramaki/.emacs_backup"))))))
 
 ;; color setup
 (set-face-foreground 'font-lock-builtin-face "brightblue")
