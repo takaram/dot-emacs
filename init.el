@@ -16,7 +16,8 @@
   (package-refresh-contents)
   (package-install 'use-package))
 (eval-when-compile (require 'use-package))
-(require 'bind-key)
+(use-package bind-key
+  :ensure t)
 
 (let ((file (expand-file-name "init-local" user-emacs-directory)))
   (if (or (file-readable-p (concat file ".elc"))
@@ -77,14 +78,33 @@
 (defun add-parent-directory-in-buffer-name (&rest args)
   (let ((file (or buffer-file-name dired-directory)))
     (when file
-      (setq file (directory-file-name file))
+      (when (not (string= file "~/"))
+        (setq file (abbreviate-file-name (directory-file-name file))))
       (let* ((parent (directory-file-name
                       (file-name-directory file)))
-             (dir (if (string= parent "/")
-                      "/" (file-name-as-directory
-                           (file-name-nondirectory parent)))))
-        (rename-buffer (concat dir (file-name-nondirectory file)))))))
+             (dir (if (string-match "\\`/[^/]*\\'" parent)
+                      parent
+                    (file-name-nondirectory parent))))
+        (rename-buffer (concat
+                        (file-name-as-directory dir)
+                        (file-name-nondirectory file)))))))
 (advice-add 'find-file :after 'add-parent-directory-in-buffer-name)
+
+(defun switch-buffer-skipping-special-buffer (next)
+  (let ((start-buf (buffer-name))
+        (func (if next 'next-buffer 'previous-buffer)))
+    (funcall func)
+    (while (and (string-match "\\`\\*.+\\*\\'" (buffer-name))
+                (not (string= start-buf (buffer-name))))
+      (funcall func))))
+(defun next-buffer-skipping-special-buffer ()
+  (interactive)
+  (switch-buffer-skipping-special-buffer t))
+(defun previous-buffer-skipping-special-buffer ()
+  (interactive)
+  (switch-buffer-skipping-special-buffer nil))
+(bind-key "C-<right>" 'next-buffer-skipping-special-buffer)
+(bind-key "C-<left>" 'previous-buffer-skipping-special-buffer)
 
 (defun revert-buffer-no-confirm (&optional force-reverting)
   "Interactive call to revert-buffer. Ignoring the auto-save
@@ -93,10 +113,7 @@
  the optional argument: force-reverting to true."
   (interactive "P")
   (if (or force-reverting (not (buffer-modified-p)))
-      (let ((mm (with-current-buffer (current-buffer)
-                  major-mode)))
-        (revert-buffer :ignore-auto :noconfirm)
-        (with-current-buffer (current-buffer) (funcall mm)))
+      (revert-buffer t t t)
     (error "The buffer has been modified")))
 (bind-key "<f5>" 'revert-buffer-no-confirm)
 
@@ -123,18 +140,18 @@
 ;;(require 'dashboard)
 ;;(dashboard-setup-startup-hook)
 
-(eval-when-compile (require 'ruby-mode nil t))
-(add-hook 'ruby-mode-hook
-          (lambda ()
-            (setq ruby-deep-indent-paren-style nil
-                  ruby-insert-encoding-magic-comment nil)))
-;; (add-hook 'ruby-mode-hook
-;; 	  (lambda () (hs-minor-mode 1)
-;;             (bind-key "C-c h" 'hs-toggle-hiding)
-;;             (add-to-list 'hs-special-modes-alist
-;;                          '(ruby-mode
-;;                            "\\(def\\|do\\|{\\)" "\\(end\\|end\\|}\\)" "#"
-;;                            (lambda (arg) (ruby-end-of-block)) nil))))
+(use-package ruby-mode
+  :defer t
+  :config
+  (add-hook 'ruby-mode-hook
+            (lambda ()
+              (setq ruby-deep-indent-paren-style nil
+                    ruby-insert-encoding-magic-comment nil)
+              (global-rbenv-mode 1)
+              (flycheck-mode 1))))
+(use-package rbenv
+  :commands (global-rbenv-mode rbenv-use rbenv-use-system rbenv-use-corresponding)
+  :ensure t)
 
 (use-package org
   :bind ("C-c C-c" . org-capture)
@@ -155,11 +172,19 @@
       (cd original-directory))))
 (add-hook 'after-init-hook 'open-startup-menu)
 
+(defun dired-find-file-or-alternate-directory ()
+  (interactive)
+  (if (file-directory-p (dired-get-file-for-visit))
+      (dired-find-alternate-file)
+    (dired-find-file)))
 (add-hook 'dired-load-hook
           (lambda ()
             (setq dired-listing-switches "-alhF"
                   line-spacing nil)
-            (put 'dired-find-alternate-file 'disabled nil)))
+            (put 'dired-find-alternate-file 'disabled nil)
+            (bind-keys :map dired-mode-map
+                       ("RET" . dired-find-file-or-alternate-directory)
+                       ([mouse-2] . dired-find-file-or-alternate-directory))))
 (use-package dired-toggle
   :bind ("C-x C-d" . dired-toggle)
   :config
@@ -183,6 +208,12 @@
   :interpreter "sed"
   :no-require t)
 
+(use-package slim-mode
+  :mode "\\.slim\\'"
+  :no-require t
+  :config
+  (bind-key "C-m" 'newline-and-indent slim-mode-map))
+
 (use-package ess-site
   :load-path "/usr/share/emacs24/site-lisp/ess"
   :defer t
@@ -202,6 +233,19 @@
 (use-package magit
   :bind ("C-c C-g" . magit-status)
   :no-require t)
+
+(use-package flycheck
+  :config
+  (global-flycheck-mode)
+  :ensure t)
+
+(use-package coffee-mode
+  :mode "\\.coffee\\'"
+  :config
+  (add-hook 'coffee-mode-hook
+            (lambda ()
+              (setq coffee-tab-width 4
+                    tab-width 4))))
 
 (defun compile-init-el ()
   (dolist (file (list
