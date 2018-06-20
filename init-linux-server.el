@@ -1,5 +1,10 @@
 (eval-when-compile (require 'use-package))
 
+(setf (cdr (assoc "melpa" package-archives))
+      "http://melpa.org/packages/"
+      (cdr (assoc "melpa-stable" package-archives))
+      "http://stable.melpa.org/packages/")
+
 ;; add ruby-mode
 (use-package ruby-mode
   :mode (("\\.rbw?\\'"  . ruby-mode)
