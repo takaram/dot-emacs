@@ -2,8 +2,11 @@
 
 ;; add ruby-mode
 (use-package ruby-mode
-  :mode "\\.rb\\'"
+  :mode (("\\.rbw?\\'"  . ruby-mode)
+         ("Gemfile\\'"  . ruby-mode)
+         ("Rakefile\\'" . ruby-mode))
   :interpreter "ruby"
+  :commands ruby-mode
   :no-require t)
 
 ;; for ideas2
