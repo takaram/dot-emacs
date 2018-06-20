@@ -140,18 +140,18 @@
 ;;(require 'dashboard)
 ;;(dashboard-setup-startup-hook)
 
-(eval-when-compile (require 'ruby-mode nil t))
-(add-hook 'ruby-mode-hook
-          (lambda ()
-            (setq ruby-deep-indent-paren-style nil
-                  ruby-insert-encoding-magic-comment nil)))
-;; (add-hook 'ruby-mode-hook
-;; 	  (lambda () (hs-minor-mode 1)
-;;             (bind-key "C-c h" 'hs-toggle-hiding)
-;;             (add-to-list 'hs-special-modes-alist
-;;                          '(ruby-mode
-;;                            "\\(def\\|do\\|{\\)" "\\(end\\|end\\|}\\)" "#"
-;;                            (lambda (arg) (ruby-end-of-block)) nil))))
+(use-package ruby-mode
+  :defer t
+  :config
+  (add-hook 'ruby-mode-hook
+            (lambda ()
+              (setq ruby-deep-indent-paren-style nil
+                    ruby-insert-encoding-magic-comment nil)
+              (global-rbenv-mode 1)
+              (flycheck-mode 1))))
+(use-package rbenv
+  :commands (global-rbenv-mode rbenv-use rbenv-use-system rbenv-use-corresponding)
+  :ensure t)
 
 (use-package org
   :bind ("C-c C-c" . org-capture)
@@ -233,6 +233,11 @@
 (use-package magit
   :bind ("C-c C-g" . magit-status)
   :no-require t)
+
+(use-package flycheck
+  :config
+  (global-flycheck-mode)
+  :ensure t)
 
 (use-package coffee-mode
   :mode "\\.coffee\\'"
