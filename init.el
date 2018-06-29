@@ -107,8 +107,8 @@
 (bind-key "C-<left>" 'previous-buffer-skipping-special-buffer)
 
 (defun revert-buffer-no-confirm (&optional force-reverting)
-  "Interactive call to revert-buffer. Ignoring the auto-save
- file and not requesting for confirmation. When the current buffer
+  "Interactive call to `revert-buffer'.  Ignoring the auto-save
+ file and not requesting for confirmation.  When the current buffer
  is modified, the command refuses to revert it, unless you specify
  the optional argument: force-reverting to true."
   (interactive "P")
@@ -136,6 +136,11 @@
 
 ;;(bind-key "C-x C-r" 'replace-string)
 (bind-key "C-x C-r" 'replace-regexp)
+
+(bind-key "C-c <left>"  'windmove-left)
+(bind-key "C-c <right>" 'windmove-right)
+(bind-key "C-c <up>"    'windmove-up)
+(bind-key "C-c <down>"  'windmove-down)
 
 ;;(require 'dashboard)
 ;;(dashboard-setup-startup-hook)

@@ -30,3 +30,39 @@
 (add-hook 'linum-mode-hook
           (lambda()
             (set-face-foreground 'linum "#999999")))
+
+(defun ansi-term-in-right-window ()
+  "Open `ansi-term' in new window."
+  (interactive)
+  (split-window-right)
+  (other-window 1)
+  (ansi-term "/bin/bash")
+  (other-window -1))
+
+(defun goto-or-open-term-window ()
+  "Go to term window."
+  (interactive)
+  (let* ((bufname "*ansi-term*")
+         (buffer (get-buffer bufname))
+         (window (get-buffer-window bufname)))
+    (if window
+        (select-window window)
+      (if buffer
+          (switch-to-buffer-other-window buffer)
+        (ansi-term-in-right-window)))))
+(bind-key "C-c t" 'goto-term-window)
+
+(use-package term
+   :defer t
+   :config
+   (defun term-toggle-mode ()
+     "Toggle term between line mode and char mode."
+     (interactive)
+     (if (term-in-line-mode)
+         (term-char-mode)
+       (term-line-mode)))
+   (bind-key "C-c C-j" 'term-toggle-mode term-mode-map)
+   (bind-key "C-c C-j" 'term-toggle-mode term-raw-map))
+
+(add-hook 'term-mode-hook
+          (lambda () (linum-mode -1)))
