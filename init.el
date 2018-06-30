@@ -41,6 +41,8 @@
 (tool-bar-mode 0)
 (menu-bar-mode 0)
 
+(ido-mode 1)
+
 (setq frame-title-format (format "%%b - Emacs %s" emacs-version))
 
 (setq-default line-spacing 0.1)
