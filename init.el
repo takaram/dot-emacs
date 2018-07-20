@@ -242,6 +242,14 @@
               (setq coffee-tab-width 4
                     tab-width 4))))
 
+(use-package ng2-mode
+  :mode "\\.ts\\'"
+  :config
+  (add-hook 'ng2-typescript-mode-hook
+            (lambda ()
+              (setq typescript-indent-level 2)))
+  :no-require t)
+
 (defun compile-init-el ()
   (dolist (file (list
                  user-init-file
