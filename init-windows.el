@@ -6,12 +6,14 @@
   ;; tunneling
   (defun get-ip-address ()
     "Win32: get the IP-address of the first network interface"
-    (let ((ipconfig (shell-command-to-string "ipconfig | findstr IPv4")))
-      (string-match "\\(\\([0-9]+.\\)+[0-9]+\\)" ipconfig)
-      (match-string 0 ipconfig)))
+    (let ((cmd (if (string-match "bash" shell-file-name)
+                   "ifconfig | grep Bcast" "ipconfig | findstr IPv4")))
+      (let ((ipconfig (shell-command-to-string cmd)))
+        (string-match "\\(\\([0-9]+.\\)+[0-9]+\\)" ipconfig)
+        (match-string 0 ipconfig))))
   (when (not (string-match "^133\\.103\\.101\\." (get-ip-address)))
     (add-to-list 'tramp-default-proxies-alist
-                 '("uv20" nil "/plink:v2452:"))
+                 '("uv20" nil "/plink:fe1:"))
     (add-to-list 'tramp-default-proxies-alist
                  '("ubuntu" nil "/uv20:"))
     (add-to-list 'tramp-default-method-alist
