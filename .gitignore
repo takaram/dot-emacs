@@ -1,9 +1,10 @@
-auto-save-list/*
-backup/*
-eshell/*
+/auto-save-list
+/backup
+/eshell
+/elpa
 init-local.el
 *.elc
-lisp/*
+/lisp
 recentf
 tramp
 !.gitkeep

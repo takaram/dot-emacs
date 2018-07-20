@@ -1,16 +1,13 @@
-(let ((lisp-dir (expand-file-name "lisp" user-emacs-directory)))
-  (setq package-user-dir lisp-dir)
-  (add-to-list 'load-path lisp-dir)
-  (dolist (child (directory-files lisp-dir t nil t))
-    (when (and (file-directory-p child)
-               (not (string-match-p "^\\." (file-name-nondirectory child))))
-      (add-to-list 'load-path (expand-file-name child lisp-dir)))))
+;;;
+;;; Package settings
+;;;
 (require 'package)
+(setq package-user-dir (expand-file-name "lisp" user-emacs-directory))
 (add-to-list 'package-archives
              '("melpa-stable" . "https://stable.melpa.org/packages/") t)
 (add-to-list 'package-archives
              '("melpa" . "https://melpa.org/packages/") t)
-(package-initialize t)
+(package-initialize)
 
 (unless (package-installed-p 'use-package)
   (package-refresh-contents)
@@ -19,6 +16,9 @@
 (use-package bind-key
   :ensure t)
 
+;;;
+;;; load init file specific to the environment
+;;;
 (let ((file (expand-file-name "init-local" user-emacs-directory)))
   (if (or (file-readable-p (concat file ".elc"))
           (file-readable-p (concat file ".el")))
