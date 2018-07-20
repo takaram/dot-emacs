@@ -77,7 +77,7 @@
       scroll-preserve-screen-position t
       scroll-error-top-bottom t)
 
-(defun add-parent-directory-in-buffer-name (&rest args)
+(defun add-parent-directory-to-buffer-name (&rest args)
   (let ((file (or buffer-file-name dired-directory)))
     (when file
       (when (not (string= file "~/"))
@@ -90,7 +90,7 @@
         (rename-buffer (concat
                         (file-name-as-directory dir)
                         (file-name-nondirectory file)))))))
-(advice-add 'find-file :after 'add-parent-directory-in-buffer-name)
+(add-hook 'find-file-hook 'add-parent-directory-to-buffer-name)
 
 (defun switch-buffer-skipping-special-buffer (next)
   (let ((start-buf (buffer-name))
