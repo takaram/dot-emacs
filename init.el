@@ -41,6 +41,8 @@
 (tool-bar-mode 0)
 (menu-bar-mode 0)
 
+(ido-mode 1)
+
 (setq frame-title-format (format "%%b - Emacs %s" emacs-version))
 
 (setq-default line-spacing 0.1)
@@ -107,8 +109,8 @@
 (bind-key "C-<left>" 'previous-buffer-skipping-special-buffer)
 
 (defun revert-buffer-no-confirm (&optional force-reverting)
-  "Interactive call to revert-buffer. Ignoring the auto-save
- file and not requesting for confirmation. When the current buffer
+  "Interactive call to `revert-buffer'.  Ignoring the auto-save
+ file and not requesting for confirmation.  When the current buffer
  is modified, the command refuses to revert it, unless you specify
  the optional argument: force-reverting to true."
   (interactive "P")
@@ -137,21 +139,26 @@
 ;;(bind-key "C-x C-r" 'replace-string)
 (bind-key "C-x C-r" 'replace-regexp)
 
+(bind-key "C-c <left>"  'windmove-left)
+(bind-key "C-c <right>" 'windmove-right)
+(bind-key "C-c <up>"    'windmove-up)
+(bind-key "C-c <down>"  'windmove-down)
+
 ;;(require 'dashboard)
 ;;(dashboard-setup-startup-hook)
 
-(eval-when-compile (require 'ruby-mode nil t))
-(add-hook 'ruby-mode-hook
-          (lambda ()
-            (setq ruby-deep-indent-paren-style nil
-                  ruby-insert-encoding-magic-comment nil)))
-;; (add-hook 'ruby-mode-hook
-;; 	  (lambda () (hs-minor-mode 1)
-;;             (bind-key "C-c h" 'hs-toggle-hiding)
-;;             (add-to-list 'hs-special-modes-alist
-;;                          '(ruby-mode
-;;                            "\\(def\\|do\\|{\\)" "\\(end\\|end\\|}\\)" "#"
-;;                            (lambda (arg) (ruby-end-of-block)) nil))))
+(use-package ruby-mode
+  :defer t
+  :config
+  (add-hook 'ruby-mode-hook
+            (lambda ()
+              (setq ruby-deep-indent-paren-style nil
+                    ruby-insert-encoding-magic-comment nil)
+              (global-rbenv-mode 1)
+              (flycheck-mode 1))))
+(use-package rbenv
+  :commands (global-rbenv-mode rbenv-use rbenv-use-system rbenv-use-corresponding)
+  :ensure t)
 
 (use-package org
   :bind ("C-c C-c" . org-capture)
@@ -233,6 +240,11 @@
 (use-package magit
   :bind ("C-c C-g" . magit-status)
   :no-require t)
+
+(use-package flycheck
+  :config
+  (global-flycheck-mode)
+  :ensure t)
 
 (use-package coffee-mode
   :mode "\\.coffee\\'"

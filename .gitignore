@@ -9,3 +9,4 @@ tramp
 !.gitkeep
 bookmarks
 .custom-file.el
+/ido.last

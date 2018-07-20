@@ -1,15 +1,25 @@
+(eval-when-compile (require 'use-package))
+
+(setf (cdr (assoc "melpa" package-archives))
+      "http://melpa.org/packages/"
+      (cdr (assoc "melpa-stable" package-archives))
+      "http://stable.melpa.org/packages/")
+
 ;; add ruby-mode
 (use-package ruby-mode
-  :mode "\\.rb\\'"
+  :mode (("\\.rbw?\\'"  . ruby-mode)
+         ("Gemfile\\'"  . ruby-mode)
+         ("Rakefile\\'" . ruby-mode))
   :interpreter "ruby"
+  :commands ruby-mode
   :no-require t)
 
 ;; for ideas2
 (add-hook 'after-init-hook
           (lambda ()
-            (when (equal (user-real-login-name) "ideas2")
+            (when (string= (user-real-login-name) "ideas2")
               (setq backup-directory-alist
-                    '(".*" . "/aptmp/ideas2/aramaki/.emacs_backup")))))
+                    '((".*" . "/aptmp/ideas2/aramaki/.emacs_backup"))))))
 
 ;; color setup
 (set-face-foreground 'font-lock-builtin-face "brightblue")
@@ -20,3 +30,39 @@
 (add-hook 'linum-mode-hook
           (lambda()
             (set-face-foreground 'linum "#999999")))
+
+(defun ansi-term-in-right-window ()
+  "Open `ansi-term' in new window."
+  (interactive)
+  (split-window-right)
+  (other-window 1)
+  (ansi-term "/bin/bash")
+  (other-window -1))
+
+(defun goto-or-open-term-window ()
+  "Go to term window."
+  (interactive)
+  (let* ((bufname "*ansi-term*")
+         (buffer (get-buffer bufname))
+         (window (get-buffer-window bufname)))
+    (if window
+        (select-window window)
+      (if buffer
+          (switch-to-buffer-other-window buffer)
+        (ansi-term-in-right-window)))))
+(bind-key "C-c t" 'goto-term-window)
+
+(use-package term
+   :defer t
+   :config
+   (defun term-toggle-mode ()
+     "Toggle term between line mode and char mode."
+     (interactive)
+     (if (term-in-line-mode)
+         (term-char-mode)
+       (term-line-mode)))
+   (bind-key "C-c C-j" 'term-toggle-mode term-mode-map)
+   (bind-key "C-c C-j" 'term-toggle-mode term-raw-map))
+
+(add-hook 'term-mode-hook
+          (lambda () (linum-mode -1)))
