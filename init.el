@@ -246,6 +246,11 @@
   (global-flycheck-mode)
   :ensure t)
 
+(use-package company
+  :config
+  (global-company-mode)
+  :ensure t)
+
 (use-package coffee-mode
   :mode "\\.coffee\\'"
   :config
