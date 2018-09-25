@@ -202,6 +202,10 @@
   :config
   (sh-electric-here-document-mode -1))
 
+(use-package comment-dwim-2
+  :bind ("M-;" . comment-dwim-2)
+  :ensure t)
+
 (use-package markdown-mode
   :mode ("\\.markdown\\'" "\\.md\\'")
   :no-require t)
@@ -217,7 +221,6 @@
 
 (use-package slim-mode
   :mode "\\.slim\\'"
-  :no-require t
   :config
   (bind-key "C-m" 'newline-and-indent slim-mode-map))
 
@@ -238,8 +241,12 @@
   :no-require t)
 
 (use-package magit
-  :bind ("C-c C-g" . magit-status)
-  :no-require t)
+  :bind ("C-c C-g" . magit-status))
+
+(use-package comment-mode
+  :bind ("M-c" . comment-mode)
+  ;; load from ~/.emacs.d/lisp
+  :load-path "lisp")
 
 (use-package flycheck
   :config
