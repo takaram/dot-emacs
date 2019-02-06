@@ -243,6 +243,11 @@
 (use-package magit
   :bind ("C-c C-g" . magit-status))
 
+(use-package counsel
+  :bind (("M-x" . counsel-M-x)
+         ("C-x C-f" . counsel-find-file))
+  :ensure t)
+
 (use-package comment-mode
   :bind ("M-c" . comment-mode)
   ;; load from ~/.emacs.d/lisp
