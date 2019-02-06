@@ -282,6 +282,17 @@
               (setq typescript-indent-level 2)))
   :no-require t)
 
+(use-package web-mode
+  :mode ("\\.html?\\'" "\\.erb\\'")
+  :config
+  (setq web-mode-markup-indent-offset 2
+        web-mode-css-indent-offset 2
+        web-mode-code-indent-offset 2
+        web-mode-style-padding 2
+        web-mode-script-padding 2)
+  (set-face-foreground 'web-mode-doctype-face "dark cyan")
+  (set-face-foreground 'web-mode-html-tag-face "blue"))
+
 (defun compile-init-el ()
   (dolist (file (list
                  user-init-file
