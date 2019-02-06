@@ -1,6 +1,9 @@
-;;;
-;;; Package settings
-;;;
+;;; init.el --- my config file for emacs
+;;; Commentary:
+;;; Code:
+;;
+;; Package settings
+;;
 (require 'package)
 (setq package-user-dir (expand-file-name "lisp" user-emacs-directory))
 (add-to-list 'package-archives
@@ -16,9 +19,9 @@
 (use-package bind-key
   :ensure t)
 
-;;;
-;;; load init file specific to the environment
-;;;
+;;
+;; load init file specific to the environment
+;;
 (let ((file (expand-file-name "init-local" user-emacs-directory)))
   (if (or (file-readable-p (concat file ".elc"))
           (file-readable-p (concat file ".el")))
@@ -288,3 +291,6 @@
       (byte-compile-file file))))
 (add-hook 'after-init-hook 'compile-init-el)
 (add-hook 'kill-emacs-hook 'compile-init-el)
+
+(provide 'init)
+;;; init.el ends here
