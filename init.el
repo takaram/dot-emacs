@@ -153,9 +153,6 @@
 (bind-key "C-c <up>"    'windmove-up)
 (bind-key "C-c <down>"  'windmove-down)
 
-;;(require 'dashboard)
-;;(dashboard-setup-startup-hook)
-
 (use-package ruby-mode
   :defer t
   :config
@@ -168,25 +165,6 @@
 (use-package rbenv
   :commands (global-rbenv-mode rbenv-use rbenv-use-system rbenv-use-corresponding)
   :ensure t)
-
-(use-package org
-  :bind ("C-c C-c" . org-capture)
-  :defines org-capture-templates
-  :config
-  (setq org-return-follows-link t
-        org-startup-folded nil)
-  (setcdr (assoc 'file org-link-frame-setup) 'find-file))
-
-(defun open-startup-menu ()
-  (let ((path-to-memo "~/ownCloud/memo.org")
-        (original-directory default-directory))
-    (when (file-readable-p path-to-memo)
-      (find-file path-to-memo)
-      (setq org-capture-templates
-            '(("t" "TODO" entry (file+headline path-to-memo "Tasks")
-               "* TODO %?\n\n")))
-      (cd original-directory))))
-(add-hook 'after-init-hook 'open-startup-menu)
 
 (defun dired-find-file-or-alternate-directory ()
   (interactive)
@@ -217,26 +195,25 @@
 
 (use-package markdown-mode
   :mode ("\\.markdown\\'" "\\.md\\'")
-  :no-require t)
+  :no-require t
+  :ensure t)
 
 (use-package yaml-mode
   :mode "\\.ya?ml\\'"
-  :no-require t)
+  :no-require t
+  :ensure t)
 
 (use-package sed-mode
   :mode "\\.sed\\'"
   :interpreter "sed"
-  :no-require t)
+  :no-require t
+  :ensure t)
 
 (use-package slim-mode
   :mode "\\.slim\\'"
   :config
-  (bind-key "C-m" 'newline-and-indent slim-mode-map))
-
-(use-package ess-site
-  :load-path "/usr/share/emacs24/site-lisp/ess"
-  :defer t
-  :no-require t)
+  (bind-key "C-m" 'newline-and-indent slim-mode-map)
+  :ensure t)
 
 (use-package multi-term
   :commands multi-term
@@ -247,7 +224,8 @@
               (linum-mode 0)
               (hl-line-mode 0)
               (set-face-background 'hl-line (face-background 'default))))
-  :no-require t)
+  :no-require t
+  :ensure t)
 
 (use-package magit
   :bind ("C-c C-g" . magit-status))
@@ -256,11 +234,6 @@
   :bind (("M-x" . counsel-M-x)
          ("C-x C-f" . counsel-find-file))
   :ensure t)
-
-(use-package comment-mode
-  :bind ("M-c" . comment-mode)
-  ;; load from ~/.emacs.d/lisp
-  :load-path "lisp")
 
 (use-package flycheck
   :config
@@ -272,14 +245,6 @@
   :config
   (global-company-mode)
   :ensure t)
-
-(use-package coffee-mode
-  :mode "\\.coffee\\'"
-  :config
-  (add-hook 'coffee-mode-hook
-            (lambda ()
-              (setq coffee-tab-width 4
-                    tab-width 4))))
 
 (use-package ng2-mode
   :mode "\\.ts\\'"
