@@ -268,6 +268,7 @@
   :ensure t)
 
 (use-package company
+  :bind ("C-SPC" . company-complete)
   :config
   (global-company-mode)
   :ensure t)
