@@ -129,6 +129,12 @@
   (indent-region (point-min) (point-max)))
 (bind-key "C-M-]" 'indent-all)
 
+(defun newline-at-the-end-of-line ()
+  (interactive)
+  (end-of-line)
+  (newline-and-indent))
+(bind-key "C-M-j" 'newline-at-the-end-of-line)
+
 (bind-key "C-k" 'kill-whole-line)
 (bind-key "M-k" 'kill-line)
 
