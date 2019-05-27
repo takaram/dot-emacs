@@ -6,7 +6,7 @@
 (defun get-ip-address ()
   "Win32: get the IP-address of the first network interface."
   (let ((cmd (if (string-match "bash" shell-file-name)
-                 "ifconfig | grep Bcast" "ipconfig | findstr IPv4")))
+                 "hostname -I" "ipconfig | findstr IPv4")))
     (let ((ipconfig (shell-command-to-string cmd)))
       (string-match "\\(\\([0-9]+.\\)+[0-9]+\\)" ipconfig)
       (match-string 0 ipconfig))))
