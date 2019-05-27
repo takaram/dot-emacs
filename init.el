@@ -22,7 +22,16 @@
 ;;
 ;; load init file specific to the environment
 ;;
-(let ((file (expand-file-name "init-local" user-emacs-directory)))
+(defun local-init-file ()
+  "Return local init file name for the system where Emacs is running."
+  (cond ((eq system-type 'gnu/linux)
+         (cond ((string-match-p "Microsoft" (shell-command-to-string "uname -r")) "init-wsl")
+               ((window-system) "init-linux-desktop")
+               (t "init-linux-server")))
+        ((eq system-type 'windows-nt) "init-windows")
+        (t "init-local")))
+
+(let ((file (expand-file-name (local-init-file) user-emacs-directory)))
   (if (or (file-readable-p (concat file ".elc"))
           (file-readable-p (concat file ".el")))
       (load file)))
@@ -301,9 +310,10 @@
   (set-face-foreground 'web-mode-html-tag-face "blue"))
 
 (defun compile-init-el ()
+  "Compile init.el and my local init file."
   (dolist (file (list
                  user-init-file
-                 (expand-file-name "init-local.el" user-emacs-directory)))
+                 (expand-file-name (concat (local-init-file) ".el") user-emacs-directory)))
     (when (and file (file-readable-p file)
                (file-newer-than-file-p file (concat file "c")))
       (byte-compile-file file))))
