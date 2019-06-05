@@ -309,6 +309,17 @@
   (set-face-foreground 'web-mode-doctype-face "dark cyan")
   (set-face-foreground 'web-mode-html-tag-face "blue"))
 
+(use-package emmet-mode
+  :init
+  (add-hook 'web-mode-hook 'emmet-mode)
+  :config
+  (puthash "thymeleaf"
+           "!!!+doc[lang=ja xmlns:th=http://www.thymeleaf.org]" emmet-tag-aliases-table)
+  (puthash "defaultAttr" (let ((tbl (make-hash-table :test 'equal)))
+                           (puthash "th:action" "" tbl)
+                           (puthash "method" "post" tbl) tbl)
+           (gethash "form" emmet-tag-settings-table)))
+
 (defun compile-init-el ()
   "Compile init.el and my local init file."
   (dolist (file (list
