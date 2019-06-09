@@ -162,6 +162,56 @@
 (bind-key "C-c <up>"    'windmove-up)
 (bind-key "C-c <down>"  'windmove-down)
 
+(defun duplicate-current-line-or-region (n up)
+  (let* (kill-ring
+         kill-ring-yank-pointer
+         (deactivate-mark nil)
+         (inhibit-message t)
+         (region (region-active-p))
+         (col (current-column))
+         (lines
+          (if region (count-lines (region-beginning) (region-end)) 1)))
+    (when (region-active-p) (goto-char (region-beginning)))
+    (kill-whole-line lines)
+    (dotimes (i (1+ n)) (yank))
+    (forward-line (if up (- (* (1+ n) lines)) (- lines)))
+    (if region
+        (progn
+          (push-mark nil t)
+          (forward-line lines))
+      (move-to-column col))))
+(defun duplicate-up-current-line-or-region (n)
+  "Duplicates current line or region to the top of it.
+The line or region is duplicated `N` times."
+  (interactive "p")
+  (duplicate-current-line-or-region n t))
+(defun duplicate-down-current-line-or-region (n)
+  "Duplicates current line or region to the bottom of it.
+The line or region is duplicated `N` times."
+  (interactive "p")
+  (duplicate-current-line-or-region n nil))
+(bind-key "C-M-<up>" 'duplicate-up-current-line-or-region)
+(bind-key "C-M-<down>" 'duplicate-down-current-line-or-region)
+
+(defun move-current-line (up)
+  (let (kill-ring
+        kill-ring-yank-pointer
+        (inhibit-message t)
+        (col (current-column)))
+    (kill-whole-line)
+    (forward-line (if up -1 1))
+    (yank)
+    (forward-line -1)
+    (move-to-column col)))
+(defun move-up-current-line ()
+  (interactive)
+  (move-current-line t))
+(defun move-down-current-line ()
+  (interactive)
+  (move-current-line nil))
+(bind-key "M-<up>" 'move-up-current-line)
+(bind-key "M-<down>" 'move-down-current-line)
+
 (use-package ruby-mode
   :defer t
   :config
