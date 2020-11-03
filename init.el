@@ -285,6 +285,13 @@ The line or region is duplicated `N` times."
   (bind-key "C-m" 'newline-and-indent slim-mode-map)
   :ensure t)
 
+(use-package php-mode
+  :mode "\\.php\\'"
+  :config
+  (add-hook 'php-mode-hook
+            (lambda ()
+              (setq c-basic-offset 2))))
+
 (use-package multi-term
   :commands multi-term
   :config
