@@ -69,6 +69,17 @@
   (set-face-background 'hl-line "#ccffff"))
 (show-paren-mode t)
 
+(when (not window-system)
+  ;; color setup
+  (set-face-foreground 'font-lock-builtin-face "brightblue")
+  (set-face-foreground 'font-lock-comment-face "color-132")
+  (set-face-foreground 'font-lock-function-name-face "color-32")
+  (set-face-foreground 'font-lock-string-face "color-197")
+  (set-face-foreground 'minibuffer-prompt "brightblue")
+  (add-hook 'linum-mode-hook
+            (lambda()
+              (set-face-foreground 'linum "#999999"))))
+
 (defalias 'yes-or-no-p 'y-or-n-p)
 
 (setq-default indent-tabs-mode nil)
