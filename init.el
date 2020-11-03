@@ -250,12 +250,14 @@ The line or region is duplicated `N` times."
                        ("RET" . dired-find-file-or-alternate-directory)
                        ([mouse-2] . dired-find-file-or-alternate-directory))))
 (use-package dired-toggle
+  :defines dired-toggle-window-side dired-toggle-window-size
   :bind ("C-x C-d" . dired-toggle)
   :config
   (setq dired-toggle-window-side 'below
         dired-toggle-window-size 8))
 
 (use-package sh-script
+  :defer t
   :config
   (sh-electric-here-document-mode -1))
 
@@ -325,6 +327,7 @@ The line or region is duplicated `N` times."
 
 (use-package ng2-mode
   :mode "\\.ts\\'"
+  :defines typescript-indent-level
   :config
   (add-hook 'ng2-typescript-mode-hook
             (lambda ()
@@ -340,9 +343,11 @@ The line or region is duplicated `N` times."
         web-mode-style-padding 2
         web-mode-script-padding 2)
   (set-face-foreground 'web-mode-doctype-face "dark cyan")
-  (set-face-foreground 'web-mode-html-tag-face "blue"))
+  (set-face-foreground 'web-mode-html-tag-face "blue")
+  :ensure t)
 
 (use-package emmet-mode
+  :command emmet-mode
   :init
   (add-hook 'web-mode-hook 'emmet-mode)
   :config
@@ -351,7 +356,8 @@ The line or region is duplicated `N` times."
   (puthash "defaultAttr" (let ((tbl (make-hash-table :test 'equal)))
                            (puthash "th:action" "" tbl)
                            (puthash "method" "post" tbl) tbl)
-           (gethash "form" emmet-tag-settings-table)))
+           (gethash "form" emmet-tag-settings-table))
+  :ensure t)
 
 (defun compile-init-el ()
   "Compile init.el and my local init file."
