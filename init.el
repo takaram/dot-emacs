@@ -347,7 +347,7 @@ The line or region is duplicated `N` times."
   :ensure t)
 
 (use-package emmet-mode
-  :command emmet-mode
+  :commands emmet-mode
   :init
   (add-hook 'web-mode-hook 'emmet-mode)
   :config
