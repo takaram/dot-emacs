@@ -46,7 +46,9 @@
 
 (setq inhibit-startup-message t)
 
-(global-linum-mode t)
+(if (version<= "26.1" emacs-version)
+    (global-display-line-numbers-mode)
+  (global-linum-mode t))
 (line-number-mode t)
 (column-number-mode t)
 
