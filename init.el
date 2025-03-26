@@ -160,12 +160,12 @@
 (bind-key "C-k" 'kill-whole-line)
 (bind-key "M-k" 'kill-line)
 
-(bind-key "C-x k" 'kill-this-buffer)
-(defun kill-this-buffer-and-window()
+(bind-key "C-x k" 'kill-current-buffer)
+(defun kill-current-buffer-and-window()
   (interactive)
-  (kill-this-buffer)
+  (kill-current-buffer)
   (delete-window))
-(bind-key "C-x 9" 'kill-this-buffer-and-window)
+(bind-key "C-x 9" 'kill-current-buffer-and-window)
 
 ;;(bind-key "C-x C-r" 'replace-string)
 (bind-key "C-x C-r" 'replace-regexp)
