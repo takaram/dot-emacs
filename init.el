@@ -361,6 +361,10 @@ The line or region is duplicated `N` times."
            (gethash "form" emmet-tag-settings-table))
   :ensure t)
 
+(use-package dockerfile-mode
+  :mode "\\`Dockerfile.*"
+  :ensure t)
+
 (defun compile-init-el ()
   "Compile init.el and my local init file."
   (dolist (file (list
